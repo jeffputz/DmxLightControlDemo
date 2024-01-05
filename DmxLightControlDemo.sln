@@ -4,6 +4,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DmxLightControlDemo.Core", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DmxLightControlDemo.Blazor", "DmxLightControlDemo.Blazor\DmxLightControlDemo.Blazor.csproj", "{2A8BF30C-6792-4D02-86A9-F415E5071B8B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{90AA58EB-208E-490F-BE2B-02C5FB7F0D69}"
+	ProjectSection(SolutionItems) = preProject
+		lib\Kadmium-sACN.dll = lib\Kadmium-sACN.dll
+		lib\Kadmium-sACN.pdb = lib\Kadmium-sACN.pdb
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
