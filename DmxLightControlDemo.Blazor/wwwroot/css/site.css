@@ -1,30 +1,104 @@
-@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
-
-html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
-
 h1:focus {
     outline: none;
 }
 
-a, .btn-link {
-    color: #0071c1;
+div.slideGrouper {
+    display: inline-block;
+    position: relative;
+    --width: 60px;
+    --height: 250px;
+    margin-right: calc(var(--width) / 2);
 }
 
-.btn-primary {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
+.sliderContain {
+    width: var(--width);
+    height: calc(var(--height) + 1.5em);
+    position: relative;
+    margin: 0 auto;
+}
+.sliderContain input {
+    width: var(--height);
+    height: var(--width);
+    left: 0;
+
+    /* Pushes the slider slightly upward off the bottom of the line */
+    bottom: -0.75em;
+
+    /* Rotation -90deg makes sliding upward increase, and
+    downward decrease. TranslateY centers us since we're
+    absolutely positioned */
+    transform: rotate(-90deg) translateY(calc(var(--width) / 2));
+    transform-origin: left;
+    position: absolute;
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+span.slideValue {
+    text-align: center;
+    width: 100%;
+    display: block;
+    font-size: 1em;
+    margin-top: -1.0em;
 }
 
-.content {
-    padding-top: 1.1rem;
+/*Range Reset*/
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
 }
+
+/* Removes default focus */
+input[type="range"]:focus {
+    outline: none;
+}
+
+input[type="range"]:disabled::-webkit-slider-runnable-track,
+input[type="range"]:disabled::-webkit-slider-thumb {
+    background-color: #eee;
+    cursor: default;
+}
+
+/***** Chrome, Safari, Opera and Edge Chromium styles *****/
+/* slider track */
+input[type="range"]::-webkit-slider-runnable-track {
+    background-color: #000;
+    border-radius: 0.5rem;
+    height: 0.5rem;
+}
+
+/* slider thumb */
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    margin-top: -0.75em; /* Centers thumb on the track */
+
+    /*custom styles*/
+    background-color: #999;
+    height: 2rem;
+    width: 1rem;
+}
+
+
+/******** Firefox styles ********/
+/* slider track */
+input[type="range"]::-moz-range-track {
+    background-color: #000;
+    border-radius: 0.5rem;
+    height: 0.5rem;
+}
+
+/* slider thumb */
+input[type="range"]::-moz-range-thumb {
+    border: none; /*Removes extra border that FF applies*/
+    border-radius: 0; /*Removes default border-radius that FF applies*/
+
+    /*custom styles*/
+    background-color: #999;
+    height: 2rem;
+    width: 1rem;
+}
+
 
 .valid.modified:not([type=checkbox]) {
     outline: 1px solid #26b050;

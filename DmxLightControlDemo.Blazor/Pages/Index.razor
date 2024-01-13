@@ -1,8 +1,44 @@
 ﻿@page "/"
+@using System.Timers
+@using DmxLightControlDemo.Core
+@inject IStateManager StateManager
 
-<PageTitle>Index</PageTitle>
+<PageTitle>DMX Light Control Demo</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="container">
+    <h1>DMX Light Control Demo</h1>
+    
+    <p>fixture</p>
+    
+    <p>parameter</p>
+    
+    <div class="slideGrouper">
+        <div class="sliderContain">
+            <input type="range" step="1" @bind-value="_displayValue" min="0" max="255" @oninput="HandleRange">
+        </div>
+        <span class="slideValue">@_displayValue</span>
+    </div>
+</div>
 
-Welcome to your new app.
+@code
+{
+    protected override Task OnInitializedAsync()
+    {
+        _timer.Interval = 25;
+        _timer.AutoReset = false;
+        _timer.Elapsed += (_, _) =>
+        {
+            StateHasChanged();
+        };
+        return base.OnInitializedAsync();
+    }
+    
+    private void HandleRange(ChangeEventArgs obj)
+    {
+        StateManager.SetDmxValue(29, (byte)_displayValue);
+        _timer.Start();
+    }
 
+    private ushort _displayValue;
+    private readonly Timer _timer = new ();
+}
