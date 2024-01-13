@@ -14,9 +14,9 @@
     
     <div class="slideGrouper">
         <div class="sliderContain">
-            <input type="range" step="1" @bind-value="_displayValue" min="0" max="255" @oninput="HandleRange">
+            <input type="range" step="1" @bind-value="_currentValue" min="0" max="255" @oninput="HandleRange">
         </div>
-        <span class="slideValue">@_displayValue</span>
+        <span class="slideValue">@_currentValue</span>
     </div>
 </div>
 
@@ -24,21 +24,23 @@
 {
     protected override Task OnInitializedAsync()
     {
+        _dmxParameter = StateManager.Fixtures[0].Parameters[0];
         _timer.Interval = 25;
         _timer.AutoReset = false;
         _timer.Elapsed += (_, _) =>
         {
-            StateHasChanged();
         };
         return base.OnInitializedAsync();
     }
     
     private void HandleRange(ChangeEventArgs obj)
     {
-        StateManager.SetDmxValue(29, (byte)_displayValue);
+        StateManager.SetDmxValue(_dmxParameter, Convert.ToByte(obj.Value));
+        _currentValue = _dmxParameter.CurrentValue;
         _timer.Start();
     }
 
-    private ushort _displayValue;
+    private DmxParameter _dmxParameter;
+    private byte _currentValue;
     private readonly Timer _timer = new ();
 }

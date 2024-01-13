@@ -4,7 +4,7 @@ public interface IStateManager
 {
     byte[] DmxValues { get; }
     List<Fixture> Fixtures { get; }
-    void SetDmxValue(ushort channel, byte value);
+    void SetDmxValue(DmxParameter dmxParameter, byte value);
     void AddFixture(Fixture fixture);
     void ResetFixtures();
 }
@@ -14,11 +14,12 @@ public class StateManager : IStateManager
     public byte[] DmxValues { get; } = new byte[512];
     public List<Fixture> Fixtures { get; } = new();
     
-    public void SetDmxValue(ushort channel, byte value)
+    public void SetDmxValue(DmxParameter dmxParameter, byte value)
     {
         // subtract 1 because DMX channels start at 1, but array indexes start at 0
-        DmxValues[channel - 1] = value;
-        Console.WriteLine($"Channel {channel} set to {value}");
+        DmxValues[dmxParameter.Channel - 1] = value;
+        dmxParameter.CurrentValue = value;
+        Console.WriteLine($"Channel {dmxParameter.Channel} set to {value}");
     }
     
     public void AddFixture(Fixture fixture)
@@ -32,7 +33,7 @@ public class StateManager : IStateManager
         {
             foreach (var parameter in fixture.Parameters)
             {
-                SetDmxValue(parameter.Channel, parameter.DefaultValue);
+                SetDmxValue(parameter, parameter.DefaultValue);
             }
         }
     }
