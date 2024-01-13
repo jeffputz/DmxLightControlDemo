@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Sockets;
 using Kadmium_sACN;
 using Kadmium_sACN.SacnSender;
 
@@ -18,6 +19,13 @@ public class SacnNetworkInterface : INetworkInterface
         _factory = new SacnPacketFactory(cid, SourceName);
         var ip = IPAddress.Parse(config.LocalIP);
         _sender = new SacnSender(ip);
+        
+        // bind a socket to the local address
+        var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+        var endpoint = new IPEndPoint(IPAddress.Parse(config.LocalIP), Constants.RemotePort);
+        socket.Bind(endpoint);
+        socket.Close();
+        socket.Dispose();
     }
     
     public async Task SendUniverse(ushort universe, IEnumerable<byte> values, byte sequenceNumber)

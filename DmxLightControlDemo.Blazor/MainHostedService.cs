@@ -1,11 +1,10 @@
 using DmxLightControlDemo.Core;
-using DmxLightControlDemo.Core.NetworkInterfaces;
 
 namespace DmxLightControlDemo.Blazor;
 
-public class MainHostedService(INetworkInterface networkInterface) : IHostedService, IDisposable
+public class MainHostedService(IDmxPollingService dmxPollingService, IStateManager stateManager) : IHostedService, IDisposable
 {
-    private readonly Orchestrator _orchestrator = new(networkInterface);
+    private readonly Orchestrator _orchestrator = new(dmxPollingService, stateManager);
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {

@@ -11,6 +11,8 @@ builder.Services.AddServerSideBlazor();
 var services = builder.Services;
 services.AddSingleton<IConfig, Config>();
 services.AddSingleton<INetworkInterface, SacnNetworkInterface>();
+services.AddSingleton<IDmxPollingService, DmxPollingService>();
+services.AddSingleton<IStateManager, StateManager>();
 
 // This is what runs the background service to make the lights do things.
 builder.Services.AddSingleton<MainHostedService>();

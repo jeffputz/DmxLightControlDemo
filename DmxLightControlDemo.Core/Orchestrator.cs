@@ -1,85 +1,72 @@
-using DmxLightControlDemo.Core.NetworkInterfaces;
-using Timer = System.Timers.Timer;
-
 namespace DmxLightControlDemo.Core;
 
-public class Orchestrator(INetworkInterface networkInterface) : IDisposable
+public class Orchestrator(IDmxPollingService dmxPollingService, IStateManager stateManager) : IDisposable
 {
-    private static Timer _pollingTimer = null!;
-    private static Timer _sendingTimer = null!;
-    private static byte _sequenceNumber;
-    
     public void Start()
     {
-        // The polling timer is used to tell the network that we're sending universes. Some devices listen for this.
-        _pollingTimer = new Timer();
-        _pollingTimer.Interval = 5000;
-        _pollingTimer.Elapsed += async (_, _) =>
+        SetupFixtures();
+        dmxPollingService.Start();
+        stateManager.ResetFixtures();
+    }
+    
+    private void SetupFixtures()
+    {
+        var fixture1 = new Fixture
         {
-            try
+            Name = "Spot 260x - 1",
+            FixtureID = 1,
+            Parameters = new List<DmxParameter>
             {
-                await networkInterface.Poll(new ushort[] { 1 }); // just the one universe
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Polling failed: {e.Message}");
-                _pollingTimer.Stop();
+                new() { Channel = 29, Name = "Pan", DefaultValue = 127 },
+                new() { Channel = 30, Name = "Pan Fine", DefaultValue = 0 },
+                new() { Channel = 31, Name = "Tilt", DefaultValue = 127 },
+                new() { Channel = 32, Name = "Tilt Fine", DefaultValue = 0 },
+                new() { Channel = 33, Name = "Pan/Tilt Speed", DefaultValue = 0 },
+                new() { Channel = 34, Name = "Color Wheel", DefaultValue = 0 },
+                new() { Channel = 35, Name = "Gobo Wheel", DefaultValue = 0 },
+                new() { Channel = 36, Name = "Gobo Rotation", DefaultValue = 0 },
+                new() { Channel = 37, Name = "Prism", DefaultValue = 0 },
+                new() { Channel = 38, Name = "Focus", DefaultValue = 0 },
+                new() { Channel = 39, Name = "Dimmer", DefaultValue = 0 },
+                new() { Channel = 40, Name = "Strobe", DefaultValue = 0 },
+                new() { Channel = 41, Name = "Function", DefaultValue = 0 },
+                new() { Channel = 42, Name = "Movement Macros", DefaultValue = 0 }
             }
         };
-        _pollingTimer.Start();
-
-        // The sending timer is used to send the current values in each universe. If we were sending multiple universes, we'd likely multi-thread and send as many at once as we could.
-        _sendingTimer = new Timer();
-        _sendingTimer.Interval = 25; // in milliseconds, so 40 times per second
-        _sendingTimer.AutoReset = false;
-        _sendingTimer.Elapsed += async (_, _) =>
+        stateManager.AddFixture(fixture1);
+        
+        var fixture2 = new Fixture
         {
-            try
+            Name = "Spot 260x - 2",
+            FixtureID = 2,
+            Parameters = new List<DmxParameter>
             {
-                // This sends the DMX universe with the current values.
-                await networkInterface.SendUniverse(1, new byte[]{}, _sequenceNumber);
+                new() { Channel = 43, Name = "Pan", DefaultValue = 127 },
+                new() { Channel = 44, Name = "Pan Fine", DefaultValue = 0 },
+                new() { Channel = 45, Name = "Tilt", DefaultValue = 127 },
+                new() { Channel = 46, Name = "Tilt Fine", DefaultValue = 0 },
+                new() { Channel = 47, Name = "Pan/Tilt Speed", DefaultValue = 0 },
+                new() { Channel = 48, Name = "Color Wheel", DefaultValue = 0 },
+                new() { Channel = 49, Name = "Gobo Wheel", DefaultValue = 0 },
+                new() { Channel = 50, Name = "Gobo Rotation", DefaultValue = 0 },
+                new() { Channel = 51, Name = "Prism", DefaultValue = 0 },
+                new() { Channel = 52, Name = "Focus", DefaultValue = 0 },
+                new() { Channel = 53, Name = "Dimmer", DefaultValue = 0 },
+                new() { Channel = 54, Name = "Strobe", DefaultValue = 0 },
+                new() { Channel = 55, Name = "Function", DefaultValue = 0 },
+                new() { Channel = 56, Name = "Movement Macros", DefaultValue = 0 }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Sending failed: {e.Message}");
-                _sendingTimer.Stop();
-                _pollingTimer.Stop();
-            }
-
-            try
-            {
-                // This sends the sync packet, which tells the DMX interfaces that they should use the values we just sent. These are used in part to compensate for packets arriving out of order.
-                await networkInterface.SyncUniverses(_sequenceNumber);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Syncing failed: {e.Message}");
-                _pollingTimer.Stop();
-                _sendingTimer.Stop();
-                return;
-            }
-            
-            // Increment the sequence number.
-            if (_sequenceNumber == 255)
-                _sequenceNumber = 0;
-            else
-                _sequenceNumber++;
-            
-            _sendingTimer.Start();
         };
-        _sendingTimer.Start();
+        stateManager.AddFixture(fixture2);
     }
     
     public void Stop()
     {
-        _pollingTimer.Stop();
-        _sendingTimer.Stop();
+        dmxPollingService.Stop();
     }
     
     public void Dispose()
     {
-        _pollingTimer.Dispose();
-        _sendingTimer.Dispose();
-        networkInterface.Dispose();
+        dmxPollingService.Dispose();
     }
 }
