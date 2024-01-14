@@ -9,7 +9,7 @@
     <h1>DMX Light Control Demo</h1>
     
     <p>Fixture:
-        <InputSelect @bind-Value="_fixture.FixtureID" @onchange="FixtureChange">
+        <InputSelect Value="_fixture.FixtureID" ValueExpression="() => _fixture.FixtureID" ValueChanged="(int fixtureID) => FixtureChange(fixtureID)">
             @foreach(var fixture in StateManager.Fixtures)
             {
                 <option value="@fixture.FixtureID">@fixture.Name</option>
@@ -18,7 +18,7 @@
     </p>
     
     <p>Parameter:
-        <InputSelect @bind-Value="_dmxParameter.Channel" @onchange="ParameterChange">
+        <InputSelect Value="_dmxParameter.Channel" ValueExpression="() => _dmxParameter.Channel" ValueChanged="(ushort channel) => ParameterChange(channel)">
             @foreach(var dmxParameter in _fixture.Parameters)
             {
                 <option value="@dmxParameter.Channel">@dmxParameter.Name</option>
@@ -45,6 +45,7 @@
     {
         _fixture = StateManager.Fixtures.First();
         _dmxParameter = _fixture.Parameters.First();
+        _currentValue = _dmxParameter.CurrentValue;
         return base.OnInitializedAsync();
     }
     
@@ -55,15 +56,18 @@
         _timer.Start();
     }
 
-    private void FixtureChange(ChangeEventArgs obj)
+    private void FixtureChange(int fixtureId)
     {
-        var fixtureId = (int)obj.Value;
         _fixture = StateManager.Fixtures.Single(x => x.FixtureID == fixtureId);
         _dmxParameter = _fixture.Parameters.First();
+        _currentValue = _dmxParameter.CurrentValue;
+        StateHasChanged();
     }
 
-    private void ParameterChange(ChangeEventArgs obj)
+    private void ParameterChange(ushort channel)
     {
-        _dmxParameter = (DmxParameter)obj.Value;
+        _dmxParameter = _fixture.Parameters.Single(x => x.Channel == channel);
+        _currentValue = _dmxParameter.CurrentValue;
+        StateHasChanged();
     }
 }
