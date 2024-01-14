@@ -4,8 +4,13 @@ public class Orchestrator(IDmxPollingService dmxPollingService, IStateManager st
 {
     public void Start()
     {
+        // define the fixtures and store them in the state manager
         SetupFixtures();
+        
+        // start the polling service, which is what sends the DMX values to the lights
         dmxPollingService.Start();
+        
+        // reset the fixtures to their default values
         stateManager.ResetFixtures();
     }
     

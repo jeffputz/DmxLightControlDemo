@@ -41,6 +41,7 @@
     private byte _currentValue;
     private readonly Timer _timer = new ();
 
+    // Load up the initial values for the dropdowns
     protected override Task OnInitializedAsync()
     {
         _fixture = StateManager.Fixtures.First();
@@ -49,6 +50,7 @@
         return base.OnInitializedAsync();
     }
     
+    // Handle a change to the slider, which is a range input limited to values between 0 and 255 in steps of 1
     private void HandleRange(ChangeEventArgs obj)
     {
         StateManager.SetDmxValue(_dmxParameter, Convert.ToByte(obj.Value));
@@ -56,6 +58,7 @@
         _timer.Start();
     }
 
+    // If the user selects a new fixtures, update the available parameters in the second dropdown
     private void FixtureChange(int fixtureId)
     {
         _fixture = StateManager.Fixtures.Single(x => x.FixtureID == fixtureId);
@@ -64,6 +67,7 @@
         StateHasChanged();
     }
 
+    // If the user selects a new parameter, update the slider value
     private void ParameterChange(ushort channel)
     {
         _dmxParameter = _fixture.Parameters.Single(x => x.Channel == channel);

@@ -14,6 +14,10 @@ public class StateManager : IStateManager
     public byte[] DmxValues { get; } = new byte[512];
     public List<Fixture> Fixtures { get; } = new();
     
+    /// <summary>
+    /// Instead of manually manipulating channel values on the parameter objects, we use
+    /// this method which handles the array shift and sets the value.
+    /// </summary>
     public void SetDmxValue(DmxParameter dmxParameter, byte value)
     {
         // subtract 1 because DMX channels start at 1, but array indexes start at 0
