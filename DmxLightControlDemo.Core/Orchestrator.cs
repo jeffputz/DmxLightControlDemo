@@ -28,7 +28,7 @@ public class Orchestrator(IDmxPollingService dmxPollingService, IStateManager st
                 new() { Channel = 37, Name = "Prism", DefaultValue = 0 },
                 new() { Channel = 38, Name = "Focus", DefaultValue = 0 },
                 new() { Channel = 39, Name = "Dimmer", DefaultValue = 0 },
-                new() { Channel = 40, Name = "Strobe", DefaultValue = 0 },
+                new() { Channel = 40, Name = "Strobe", DefaultValue = 4 },
                 new() { Channel = 41, Name = "Function", DefaultValue = 0 },
                 new() { Channel = 42, Name = "Movement Macros", DefaultValue = 0 }
             }
@@ -52,7 +52,7 @@ public class Orchestrator(IDmxPollingService dmxPollingService, IStateManager st
                 new() { Channel = 51, Name = "Prism", DefaultValue = 0 },
                 new() { Channel = 52, Name = "Focus", DefaultValue = 0 },
                 new() { Channel = 53, Name = "Dimmer", DefaultValue = 0 },
-                new() { Channel = 54, Name = "Strobe", DefaultValue = 0 },
+                new() { Channel = 54, Name = "Strobe", DefaultValue = 4 },
                 new() { Channel = 55, Name = "Function", DefaultValue = 0 },
                 new() { Channel = 56, Name = "Movement Macros", DefaultValue = 0 }
             }

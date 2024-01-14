@@ -8,9 +8,23 @@
 <div class="container">
     <h1>DMX Light Control Demo</h1>
     
-    <p>fixture</p>
+    <p>Fixture:
+        <InputSelect @bind-Value="_fixture.FixtureID" @onchange="FixtureChange">
+            @foreach(var fixture in StateManager.Fixtures)
+            {
+                <option value="@fixture.FixtureID">@fixture.Name</option>
+            }
+        </InputSelect>
+    </p>
     
-    <p>parameter</p>
+    <p>Parameter:
+        <InputSelect @bind-Value="_dmxParameter.Channel" @onchange="ParameterChange">
+            @foreach(var dmxParameter in _fixture.Parameters)
+            {
+                <option value="@dmxParameter.Channel">@dmxParameter.Name</option>
+            }
+        </InputSelect>
+        </p>
     
     <div class="slideGrouper">
         <div class="sliderContain">
@@ -22,14 +36,15 @@
 
 @code
 {
+    private Fixture _fixture;
+    private DmxParameter _dmxParameter;
+    private byte _currentValue;
+    private readonly Timer _timer = new ();
+
     protected override Task OnInitializedAsync()
     {
-        _dmxParameter = StateManager.Fixtures[0].Parameters[0];
-        _timer.Interval = 25;
-        _timer.AutoReset = false;
-        _timer.Elapsed += (_, _) =>
-        {
-        };
+        _fixture = StateManager.Fixtures.First();
+        _dmxParameter = _fixture.Parameters.First();
         return base.OnInitializedAsync();
     }
     
@@ -40,7 +55,15 @@
         _timer.Start();
     }
 
-    private DmxParameter _dmxParameter;
-    private byte _currentValue;
-    private readonly Timer _timer = new ();
+    private void FixtureChange(ChangeEventArgs obj)
+    {
+        var fixtureId = (int)obj.Value;
+        _fixture = StateManager.Fixtures.Single(x => x.FixtureID == fixtureId);
+        _dmxParameter = _fixture.Parameters.First();
+    }
+
+    private void ParameterChange(ChangeEventArgs obj)
+    {
+        _dmxParameter = (DmxParameter)obj.Value;
+    }
 }
