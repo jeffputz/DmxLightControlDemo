@@ -19,3 +19,6 @@ The demo is outputting control via sACN, so you'll need an sACN interface on you
 The `Orchestrator` class defines two lighting fixtures, which in this case are Chauvet Intimidator Spot 260x's, but you can define anything you'd like with your own fixtures.
 
 For the specifics, check the deck and the video!
+
+## Other notes
+There's a build here of `Kadmium-sACN` included in the `lib` folder, which is a library used for interfacing with sACN. The project appeared to be abandoned when I found it, and it had a bug that I submitted a PR for. My fork is here: [jeffputz/kadmium-sacn](https://github.com/jeffputz/kadmium-sacn)
