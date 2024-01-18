@@ -8,6 +8,6 @@ public class DmxParameter
 {
     public ushort Channel { get; init; }
     public string Name { get; init; } = string.Empty;
-    public byte DefaultValue { get; init; }
-    public byte CurrentValue { get; set; }
+    public float DefaultValue { get; init; }
+    public float CurrentValue { get; set; }
 }

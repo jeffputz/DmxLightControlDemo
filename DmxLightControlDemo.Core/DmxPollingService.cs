@@ -37,10 +37,12 @@ public class DmxPollingService(INetworkInterface networkInterface, IStateManager
 
         // The sending timer is used to send the current values in each universe. If we were sending multiple universes, we'd likely multi-thread and send as many at once as we could.
         _sendingTimer = new Timer();
-        _sendingTimer.Interval = 25; // in milliseconds, so 40 times per second
+        _sendingTimer.Interval = stateManager.UpdateIntervalMilliseconds; // 25 milliseconds, so 40 times per second
         _sendingTimer.AutoReset = false;
         _sendingTimer.Elapsed += async (_, _) =>
         {
+            stateManager.OnUpdateCycled();
+            
             try
             {
                 // This sends the DMX universe with the current values.

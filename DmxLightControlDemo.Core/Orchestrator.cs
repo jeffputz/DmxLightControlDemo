@@ -1,3 +1,5 @@
+using DmxLightControlDemo.Core.Effects;
+
 namespace DmxLightControlDemo.Core;
 
 public class Orchestrator(IDmxPollingService dmxPollingService, IStateManager stateManager) : IDisposable
@@ -12,6 +14,13 @@ public class Orchestrator(IDmxPollingService dmxPollingService, IStateManager st
         
         // reset the fixtures to their default values
         stateManager.ResetFixtures();
+        
+        // example chaser effect for a single parameter
+        var parameter = stateManager.Fixtures[0].Parameters[10];
+        var parameter2 = stateManager.Fixtures[1].Parameters[10];
+        var chaser = new Chaser(stateManager, 0, 255, new List<DmxParameter> { parameter, parameter2 });
+        chaser.TotalEffectTimeSpan = TimeSpan.FromSeconds(4);
+        stateManager.UpdateCycled += chaser.OnUpdateCycled;
     }
     
     private void SetupFixtures()
