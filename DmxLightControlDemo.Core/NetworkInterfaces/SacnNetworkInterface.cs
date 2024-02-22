@@ -17,15 +17,7 @@ public class SacnNetworkInterface : INetworkInterface
         var cid = new byte[16];
         cid[15] = Convert.ToByte(Random.Shared.Next(0, 255));
         _factory = new SacnPacketFactory(cid, SourceName);
-        var ip = IPAddress.Parse(config.LocalIP);
-        _sender = new SacnSender(ip);
-        
-        // bind a socket to the local address
-        var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-        var endpoint = new IPEndPoint(IPAddress.Parse(config.LocalIP), Constants.RemotePort);
-        socket.Bind(endpoint);
-        socket.Close();
-        socket.Dispose();
+        _sender = new SacnSender();
     }
     
     public async Task SendUniverse(ushort universe, IEnumerable<byte> values, byte sequenceNumber)

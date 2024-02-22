@@ -7,7 +7,7 @@ Lighting control software is very expensive, but it the underlying protocols are
 
 __Note:__ This demo is written in C#, but the concepts are applicable to any language.
 
-[link to deck here]
+[Link to deck on Google Slides](https://docs.google.com/presentation/d/1PpcDSFAqYPUxOblurKsxu1_OHazeDANY7mnKOMI5hNc/edit?usp=sharing)
 
 [link to YouTube video here]
 
